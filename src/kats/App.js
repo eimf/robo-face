@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import CartList from './bits/CartList';
 import SearchBox from './bits/SearchBox';
 import Scroll from './bits/Scroll';
-// import {cats} from './cats';
+import {cats} from './data/cats';
 import _ from 'lodash';
 import {setSearchField} from '../actions';
 
@@ -17,15 +17,14 @@ const mapDispatchToProps = (dispatch) => {
 class App extends Component {
     constructor() {
         super()
-        this.cats = [];
         this.state = {
-            kittens : []
+            kittens : cats
         }
     }
     render() {
-        // const {kittens} = this.state;
+        const {kittens} = this.state;
         const {searchField, onSearchChange} = this.props;
-        const wantedKittens = _.filter(this.cats, function(kat) {
+        const wantedKittens = _.filter(kittens, function(kat) {
           return _.includes(kat.name.toLowerCase(), searchField.toLowerCase());
         })
         return (
@@ -39,14 +38,13 @@ class App extends Component {
         );
     }
     componentDidMount() {
-        fetch('https://jsonplaceholder.typicode.com/users')
-        .then(response=> {
-            return response.json();
-        })
-        .then(users => {
-            this.cats = users;
-            this.setState({kittens: users});
-        })
+        // fetch('https://jsonplaceholder.typicode.com/users')
+        // .then(response=> {
+        //     return response.json();
+        // })
+        // .then(users => {
+        //     this.setState({kittens: users});
+        // })
     }
 }
 
