@@ -3,27 +3,28 @@ import {connect} from 'react-redux';
 import CartList from './bits/CartList';
 import SearchBox from './bits/SearchBox';
 import Scroll from './bits/Scroll';
-import {cats} from './data/cats';
+// import {cats} from './data/cats';
 import _ from 'lodash';
-import {setSearchField} from '../actions';
+import {setSearchField, requestKittens} from '../actions';
 
 const mapStateToProps = (state) => {
-    return {searchField: state.searchField};
+    return {
+        searchField: state.searchKittens.searchField,
+        kittens : state.requestKittens.kittens,
+        isPending: state.requestKittens.isPending,
+        error: state.requestKittens.error
+    }
 }
 const mapDispatchToProps = (dispatch) => {
-    return {onSearchChange: (event) => dispatch(setSearchField(event.currentTarget.value))};
+    return {
+        onSearchChange: (event) => dispatch(setSearchField(event.currentTarget.value)),
+        onRequestKittens: () => dispatch(requestKittens())
+    }
 }
 
 class App extends Component {
-    constructor() {
-        super()
-        this.state = {
-            kittens : cats
-        }
-    }
     render() {
-        const {kittens} = this.state;
-        const {searchField, onSearchChange} = this.props;
+        const {searchField, onSearchChange, kittens} = this.props;
         const wantedKittens = _.filter(kittens, function(kat) {
           return _.includes(kat.name.toLowerCase(), searchField.toLowerCase());
         })
@@ -38,13 +39,7 @@ class App extends Component {
         );
     }
     componentDidMount() {
-        // fetch('https://jsonplaceholder.typicode.com/users')
-        // .then(response=> {
-        //     return response.json();
-        // })
-        // .then(users => {
-        //     this.setState({kittens: users});
-        // })
+        this.props.onRequestKittens();
     }
 }
 
